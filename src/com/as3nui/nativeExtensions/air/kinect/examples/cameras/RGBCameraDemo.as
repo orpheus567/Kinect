@@ -14,7 +14,7 @@ package com.as3nui.nativeExtensions.air.kinect.examples.cameras
 	{
 		
 		private var rgbBitmap:Bitmap;
-		private var device:Kinect;
+		protected var device:Kinect;
 		
 		override protected function startDemoImplementation():void
 		{

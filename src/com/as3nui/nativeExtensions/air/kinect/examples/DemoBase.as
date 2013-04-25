@@ -13,8 +13,8 @@ package com.as3nui.nativeExtensions.air.kinect.examples
 		public function DemoBase()
 		{
 			demoStarted = false;
-			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler, false, 0, true);
-			addEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler, false, 0, true);
+			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			addEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler);
 		}
 		
 		protected function addedToStageHandler(event:Event):void
@@ -31,6 +31,7 @@ package com.as3nui.nativeExtensions.air.kinect.examples
 		{
 			if(!demoStarted)
 			{
+				trace("시작");
 				demoStarted = true;
 				startDemoImplementation();
 				layout();

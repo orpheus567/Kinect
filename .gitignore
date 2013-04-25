@@ -164,3 +164,5 @@ pip-log.txt
 /bin-debug
 
 .actionScriptProperties
+/KinectTest.exe
+/bin-release-temp

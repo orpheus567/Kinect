@@ -14,22 +14,25 @@ package com.as3nui.nativeExtensions.air.kinect.examples.skeleton
 	{
 		public static const KinectMaxDepthInFlash:uint = 200;
 		
-		private var device:Kinect;
+		protected var device:Kinect;
 		private var skeletonRenderers:Vector.<SkeletonRenderer>;
 		private var skeletonContainer:Sprite;
+		private var $cnt:int=0;
 		
 		override protected function startDemoImplementation():void
 		{
 			if(Kinect.isSupported())
 			{
 				device = Kinect.getDevice();
-				
+
 				var settings:KinectSettings = new KinectSettings();
 				settings.skeletonEnabled = true;
 				settings.skeletonMirrored = true;
-				
-				device.addEventListener(UserEvent.USERS_WITH_SKELETON_ADDED, skeletonsAddedHandler, false, 0, true);
-				device.addEventListener(UserEvent.USERS_WITH_SKELETON_REMOVED, skeletonsRemovedHandler, false, 0, true);
+//				settings.
+//				device.addEventListener(UserEvent.USERS_WITH_SKELETON_ADDED, skeletonsAddedHandler, false, 0, true);
+//				device.addEventListener(UserEvent.USERS_WITH_SKELETON_REMOVED, skeletonsRemovedHandler, false, 0, true);
+				device.addEventListener(UserEvent.USERS_ADDED,skeletonsAddedHandler);
+				device.addEventListener(UserEvent.USERS_REMOVED,skeletonsRemovedHandler);
 				
 				skeletonRenderers = new Vector.<SkeletonRenderer>();
 				skeletonContainer = new Sprite();
@@ -40,16 +43,37 @@ package com.as3nui.nativeExtensions.air.kinect.examples.skeleton
 			}
 		}
 		
+		protected function userAdded(event:UserEvent):void
+		{
+			// TODO Auto-generated method stub
+			trace("사용자 추가");
+		}
+		
+		protected function skeletonsRemovedHandler2(event:UserEvent):void
+		{
+			// TODO Auto-generated method stub
+			
+			trace("사용자 지우기11111111");
+		}
+		
 		protected function skeletonsRemovedHandler(event:UserEvent):void
 		{
+			trace("사용자 지우기000000000");
+				
 			for each(var removedUser:User in event.users)
 			{
 				var index:int = -1;
+					trace("event.users.length: ",event.users.length);
+					trace("skeletonRenderers.length: ",skeletonRenderers.length);
 				for(var i:int = 0; i < skeletonRenderers.length; i++)
 				{
-					if(skeletonRenderers[i].user == removedUser)
+					trace("i: ",i);
+					trace("removedUser.userID: ",removedUser.userID);
+					trace("skeletonRenderers[i].user.userID: ",skeletonRenderers[i].user.userID);
+					if(skeletonRenderers[i].user.userID == removedUser.userID)
 					{
 						index = i;
+						trace("인덱스번호: ",index);
 						break;
 					}
 				}
@@ -65,7 +89,10 @@ package com.as3nui.nativeExtensions.air.kinect.examples.skeleton
 		{
 			for each(var addedUser:User in event.users)
 			{
+				$cnt++;
 				var skeletonRenderer:SkeletonRenderer = new SkeletonRenderer(addedUser);
+				trace("사용자 아이디: ",addedUser.userID);
+				skeletonRenderer.name = "mc"+$cnt;
 				skeletonContainer.addChild(skeletonRenderer);
 				skeletonRenderers.push(skeletonRenderer);
 			}
@@ -73,6 +100,7 @@ package com.as3nui.nativeExtensions.air.kinect.examples.skeleton
 		
 		protected function enterFrameHandler(event:Event):void
 		{
+			trace("감지된 사람수: ",device.users.length);
 			for each(var skeletonRenderer:SkeletonRenderer in skeletonRenderers)
 			{
 				skeletonRenderer.explicitWidth = explicitWidth;
@@ -106,11 +134,15 @@ package com.as3nui.nativeExtensions.air.kinect.examples.skeleton
 	}
 }
 
+import away3d.cameras.SpringCam;
+
 import com.as3nui.nativeExtensions.air.kinect.data.SkeletonJoint;
 import com.as3nui.nativeExtensions.air.kinect.data.User;
 import com.bit101.components.Label;
 
+import flash.display.MovieClip;
 import flash.display.Sprite;
+import flash.events.MouseEvent;
 
 internal class SkeletonRenderer extends Sprite
 {
@@ -118,7 +150,7 @@ internal class SkeletonRenderer extends Sprite
 	public var user:User;
 	private var labels:Vector.<Label>;
 	private var circles:Vector.<Sprite>;
-	
+
 	public var explicitWidth:uint;
 	public var explicitHeight:uint;
 	
@@ -127,6 +159,11 @@ internal class SkeletonRenderer extends Sprite
 		this.user = user;
 		labels = new Vector.<Label>();
 		circles = new Vector.<Sprite>();
+		addEventListener(MouseEvent.CLICK,onClick);
+	}
+	private function onClick(event:MouseEvent):void{
+		var mc:Sprite = event.currentTarget as Sprite;
+		trace("이름: ",mc.name);
 	}
 	
 	private function createLabelsIfNeeded():void

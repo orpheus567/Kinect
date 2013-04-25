@@ -56,7 +56,7 @@ package com.as3nui.nativeExtensions.air.kinect.examples.basic {
 			trace("[BasicDemo] startDemoImplementation");
 			if (Kinect.isSupported()) {
 				device = Kinect.getDevice();
-
+				
 				rgbBitmap = new Bitmap();
 				addChild(rgbBitmap);
 
@@ -86,6 +86,7 @@ package com.as3nui.nativeExtensions.air.kinect.examples.basic {
 				settings.depthResolution = CameraResolution.RESOLUTION_320_240;
 				settings.depthShowUserColors = true;
 				settings.skeletonEnabled = true;
+				
 
 				device.start(settings);
 
@@ -217,7 +218,8 @@ package com.as3nui.nativeExtensions.air.kinect.examples.basic {
 			var closestUser:User;
 			var closestUserSkeletonId:int = -1;
 			if(device.users.length){
-			var user:User = device.users[0];
+//			var user:User = device.users[0];
+			var user:User = device.users[device.users.length-1];
 //			for each(var user:User in device.users) {
 				
 				closestUser ||= user;
@@ -261,8 +263,9 @@ package com.as3nui.nativeExtensions.air.kinect.examples.basic {
 		
 		protected function changeDepthX(numX:Number):void
 		{
+			trace("numX: ",numX);
 			// TODO Auto Generated method stub
-			
+//			trace("numX: ",numX);
 		}
 		
 		private function updateChosenSkeletonId(chosenSkeletonId:int):void
